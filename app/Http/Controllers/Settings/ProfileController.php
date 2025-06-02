@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -27,7 +26,7 @@ class ProfileController extends Controller
     /**
      * Update the user's profile settings.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request)
     {
         $request->user()->fill($request->validated());
 
@@ -36,14 +35,18 @@ class ProfileController extends Controller
         }
 
         $request->user()->save();
+                return Inertia::location(route('home'));
 
-        return to_route('profile.edit');
+        // return response()->json([
+        //     'message' => 'Profile updated successfully',
+        //     'user' => $request->user()->fresh()
+        // ]);
     }
 
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request)
     {
         $request->validate([
             'password' => ['required', 'current_password'],
